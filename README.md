@@ -1,6 +1,6 @@
 # STARUX
 
-[![Build Status](https://img.shields.io/github/actions/workflow/status/pmndrs/starux/lint-and-type.yml?branch=main&style=flat)](https://github.com/pmndrs/starux/actions?query=workflow%3ALint)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/tokhichevsky/starux/npm-publish.yml?branch=master&style=flat)](https://github.com/pmndrs/starux/actions?query=workflow%3ALint)
 [![Build Size](https://img.shields.io/bundlephobia/minzip/starux?label=bundle%20size&style=flat)](https://bundlephobia.com/result?p=starux)
 [![Version](https://img.shields.io/npm/v/starux?style=flat)](https://www.npmjs.com/package/starux)
 [![Downloads](https://img.shields.io/npm/dt/starux.svg?style=flat)](https://www.npmjs.com/package/starux)
