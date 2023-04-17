@@ -1,6 +1,6 @@
 {
   "name": "starux",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "",
   "main": "./dist/index.js",
   "types": "./dist/declaration/index.d.ts",
@@ -15,7 +15,7 @@
     "build": "jest && rm -rf dist && npm run bundle"
   },
   "prepublishOnly": "npm run build",
-  "keywords": [],
+  "keywords": ["store", "react", "state", "actions", "reducers", "typescript"],
   "author": "Anton Tarasov <lerak01@yandex.ru> (https://github.com/tokhichevsky)",
   "packageManager": "yarn@1.22.19",
   "license": "ISC",
