@@ -2,14 +2,16 @@ import { createStore } from './store';
 
 const delay = (ms: number) => {
   return new Promise(resolve => setTimeout(resolve, ms));
-}
+};
+
+const initialState = {
+  name: '',
+  isActive: true,
+  profile: { avatar: 'avatar.png', credentials: { login: 'starux', password: 'pass' } },
+};
 
 const createTestStore = () => createStore({
-  initialState: {
-    name: '',
-    isActive: true,
-    profile: { avatar: 'avatar.png', credentials: { login: 'starux', password: 'pass' } },
-  },
+  initialState,
   reducers: {
     setName: (state, name: string) => {
       state.name = name;
@@ -34,7 +36,7 @@ const createTestStore = () => createStore({
     asyncSetAvatar: async (state, avatar: string) => {
       await delay(200);
       state.profile.avatar = avatar;
-    }
+    },
   },
 });
 
@@ -44,6 +46,14 @@ describe('Starux tests', () => {
     let store: ReturnType<typeof createTestStore>;
     beforeEach(() => {
       store = createTestStore();
+    });
+    test('Initial state not changing', () => {
+      const state = store.get();
+      expect(state.profile.avatar).toBe('avatar.png');
+      expect(initialState.profile.avatar).toBe('avatar.png');
+      store.actions.setAvatar('ava.jpg');
+      expect(state.profile.avatar).toBe('ava.jpg');
+      expect(initialState.profile.avatar).toBe('avatar.png');
     });
     test('Changing property', () => {
       const state = store.get();
