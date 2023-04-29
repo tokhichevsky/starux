@@ -10,12 +10,12 @@
     "dist"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "bundle": "webpack",
-    "build": "jest && rm -rf dist && npm run bundle"
+    "build": "npm run test && rm -rf dist && npm run bundle"
   },
   "prepublishOnly": "npm run build",
-  "keywords": ["store", "react", "state", "actions", "reducers", "typescript"],
+  "keywords": ["store", "react", "state", "manager","management", "actions", "reducers", "typescript"],
   "author": "Anton Tarasov <lerak01@yandex.ru> (https://github.com/tokhichevsky)",
   "packageManager": "yarn@1.22.19",
   "license": "ISC",
