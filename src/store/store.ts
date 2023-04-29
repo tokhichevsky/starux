@@ -29,15 +29,14 @@ const createMutableObject = <Obj>(obj: Obj, onChange?: (obj: Obj) => void, curre
   const target = findTarget(obj, currentPath);
 
   for (const key of Object.keys(target)) {
+    const value = checkIsObject(target[key])
+      ? createMutableObject(obj, onChange, [ ...currentPath, key ])
+      : target[key];
     Object.defineProperty(result, key, {
       enumerable: true,
       configurable: true,
       get() {
-        if (checkIsObject(target[key])) {
-          return createMutableObject(obj, onChange, [ ...currentPath, key ]);
-        }
-
-        return target[key];
+        return value
       },
       set(value) {
         target[key] = value;
