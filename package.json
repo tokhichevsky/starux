@@ -15,7 +15,7 @@
     "test": "jest",
     "bundle": "webpack",
     "build": "npm run test && rm -rf dist && npm run bundle",
-    "build:release": "npm run test && node beforeBuild.js && rm -rf dist && npm run bundle"
+    "prepublish": "node beforeRelease.js"
   },
   "prepublishOnly": "npm run build",
   "keywords": [
