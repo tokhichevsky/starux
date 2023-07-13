@@ -3,7 +3,7 @@
   "version": "1.0.6",
   "description": "",
   "main": "./dist/index.js",
-  "types": "./dist/declaration/index.d.ts",
+  "types": "./dist/index.d.ts",
   "repository": "https://github.com/tokhichevsky/starux",
   "homepage": "https://github.com/tokhichevsky/starux",
   "files": [
