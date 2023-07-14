@@ -1,9 +1,4 @@
-import {
-  StoreGetter,
-  StoreConfig,
-  StoreSelectors,
-  StoreReducers, StoreActions, StoreListener,
-} from './type';
+import { StoreActions, StoreConfig, StoreGetter, StoreListener, StoreReducers, StoreSelectors } from './type';
 
 import clone from 'clone';
 
@@ -20,32 +15,31 @@ const findTarget = (obj: Record<string, any>, fullPath: string[]) => {
 
   return target;
 };
+
 const createMutableObject = <Obj>(obj: Obj, onChange?: (obj: Obj) => void, currentPath: string[] = []): Obj => {
   if (!checkIsObject(obj)) {
     return obj;
   }
 
-  const result = {} as Obj;
   const target = findTarget(obj, currentPath);
+  const memo = {} as typeof target;
 
-  for (const key of Object.keys(target)) {
-    const value = checkIsObject(target[key])
-      ? createMutableObject(obj, onChange, [ ...currentPath, key ])
-      : target[key];
-    Object.defineProperty(result, key, {
-      enumerable: true,
-      configurable: true,
-      get() {
-        return value
-      },
-      set(value) {
-        target[key] = value;
-        onChange?.(obj);
-      },
-    });
-  }
+  return new Proxy(target, {
+    get: (target, key: string) => {
+      const value = checkIsObject(target[key])
+        ? memo[key] ? memo[key] : createMutableObject(obj, onChange, [ ...currentPath, key ])
+        : target[key];
 
-  return result;
+      memo[key] = value;
+
+      return value;
+    },
+    set: (target, key, value) => {
+      target[key] = value;
+      onChange?.(obj);
+      return true;
+    },
+  });
 };
 
 export const createStore = <State, Reducers extends StoreReducers<State>, Selectors extends StoreSelectors<State>>

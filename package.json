@@ -6,6 +6,10 @@
   "types": "./dist/index.d.ts",
   "repository": "https://github.com/tokhichevsky/starux",
   "homepage": "https://github.com/tokhichevsky/starux",
+  "exports": {
+    ".": "./dist/index.js",
+    "./react": "./dist/react.js"
+  },
   "files": [
     "dist",
     "package.json",

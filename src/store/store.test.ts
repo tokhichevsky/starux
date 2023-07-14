@@ -4,8 +4,11 @@ const delay = (ms: number) => {
   return new Promise(resolve => setTimeout(resolve, ms));
 };
 
-const initialState = {
-  name: '',
+const initialState: {
+  profile: { credentials: { password: string; login: string }; avatar: string };
+  name?: string;
+  isActive: boolean
+} = {
   isActive: true,
   profile: { avatar: 'avatar.png', credentials: { login: 'starux', password: 'pass' } },
 };
@@ -88,6 +91,15 @@ describe('Starux tests', () => {
       const newState = store.get();
       expect(newState.profile.avatar).toBe('avatar.png');
     });
+    test('subscribe', () => {
+      const listener = jest.fn();
+      store.subscribe((state) => {
+        expect(state.name).toEqual('anton');
+        listener();
+      });
+      store.actions.setName('anton');
+      expect(listener).toBeCalledTimes(1)
+    })
   });
 
   describe('async tests', () => {
