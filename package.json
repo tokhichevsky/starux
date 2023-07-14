@@ -2,30 +2,21 @@
   "name": "starux",
   "version": "1.0.6",
   "description": "",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./index.js",
+  "types": "./index.d.ts",
   "repository": "https://github.com/tokhichevsky/starux",
   "homepage": "https://github.com/tokhichevsky/starux",
   "exports": {
-    ".": {
-      "default": "./dist/index.js",
-      "types": "./dist/index.d.ts"
-    },
-    "./react": {
-      "default": "./dist/react.js",
-      "types": "./dist/react.d.ts"
-    }
+    ".": "./index.js",
+    "./react": "./react.js"
   },
-  "files": [
-    "dist",
-    "package.json",
-    "README.md"
-  ],
   "scripts": {
     "test": "jest",
     "bundle": "webpack",
     "build": "npm run test && rm -rf dist && npm run bundle",
-    "build:release": "npm run test && node beforeRelease.js && rm -rf dist && npm run bundle"
+    "postbuild:release": "node beforeRelease.js",
+    "build:release": "npm run test && rm -rf dist && npm run bundle",
+    "publish:release": "npm run build:release && npm run postbuild:release && cd './dist' && npm publish"
   },
   "prepublishOnly": "npm run build",
   "keywords": [
