@@ -36,7 +36,7 @@ export const createHookStore = <State, Reducers extends StoreReducers<State>, Se
       };
     }, [ changeListener ]);
 
-    return result as any;
+    return result;
   };
 
   const useActions = () => {

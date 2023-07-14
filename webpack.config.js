@@ -4,7 +4,7 @@ module.exports = {
   mode: "production",
   entry: {
     'index': './src/index.ts',
-    'react': './src/react/index.ts',
+    'react': './src/react.ts',
   },
   devtool: 'source-map',
   output: {
