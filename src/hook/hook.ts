@@ -1,17 +1,25 @@
 import { createStore, StoreConfig, StoreReducers, StoreSelector, StoreSelectors } from '../store';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { shallowEqual } from './equal.util';
+import clone from 'clone';
 
 
 export const createHookStore = <State, Reducers extends StoreReducers<State>, Selectors extends StoreSelectors<State>>
 (config: StoreConfig<State, Reducers, Selectors>) => {
   const store = createStore(config);
 
-  const useSelector = <Selector extends StoreSelector<State> | keyof Selectors>(selector?: Selector):
-    Selector extends keyof Selectors
-      ? ReturnType<Selectors[Selector]>
-      : Selector extends StoreSelector<State>
-        ? ReturnType<Selector>
-        : State => {
+  type SelectReturnType<Selector extends StoreSelector<State> | keyof Selectors> = Selector extends keyof Selectors
+    ? ReturnType<Selectors[Selector]>
+    : Selector extends StoreSelector<State>
+      ? ReturnType<Selector>
+      : State
+
+  const useSelector = <Selector extends StoreSelector<State> | keyof Selectors>
+  (
+    selector?: Selector,
+    compare: (value1: SelectReturnType<Selector>, value2: SelectReturnType<Selector>) => boolean = shallowEqual,
+  ):
+    SelectReturnType<Selector> => {
 
     const select = useCallback((state: State) => {
       if (typeof selector === 'function') {
@@ -22,10 +30,13 @@ export const createHookStore = <State, Reducers extends StoreReducers<State>, Se
 
       return state;
     }, [ selector ]);
-    const [ result, setResult ] = useState(select(store.get()));
+    const [ result, setResult ] = useState(clone(select(store.get())));
 
     const changeListener = useCallback((state: State) => {
-      setResult(select(state));
+      const newResult = select(state);
+      setResult((prevResult: any) => {
+        return compare(newResult, prevResult) ? prevResult : clone(newResult);
+      });
     }, [ select ]);
 
     useEffect(() => {

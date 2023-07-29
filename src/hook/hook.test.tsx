@@ -11,7 +11,7 @@ const delay = (ms: number) => {
 const initialState = {
   name: 'anton',
   isActive: true,
-  profile: { avatar: 'avatar.png', credentials: { login: 'starux', password: 'pass' } },
+  profile: { avatar: 'avatar.png', credentials: { login: 'starux', password: 'pass', arr: [ 'adasd', { a: 'a' } ] } },
 };
 
 const createHookTestStore = () => createHookStore({
@@ -44,11 +44,7 @@ const createHookTestStore = () => createHookStore({
       state.isActive = false;
     },
     clear: () => {
-      return {
-        name: '',
-        isActive: true,
-        profile: { avatar: 'avatar.png', credentials: { login: 'starux', password: 'pass' } },
-      };
+      return initialState;
     },
     asyncSetAvatar: async (state, avatar: string) => {
       await delay(200);
@@ -57,6 +53,7 @@ const createHookTestStore = () => createHookStore({
   },
   selectors: {
     getName: (state) => state.name,
+    getProfile: (state) => state.profile,
   },
 });
 
@@ -76,7 +73,7 @@ describe('Starux hook tests', () => {
       useEffect(() => {
         onRerender();
       }, [ selected ]);
-      return <div data-testid="selector">{selected.toString()}</div>;
+      return <div data-testid="selector">{typeof selected === 'object' ? JSON.stringify(selected) : selected}</div>;
     };
 
     const ActionComponent = (props: { do: (actions: ReturnType<typeof store.useActions>) => void }) => {
@@ -117,6 +114,25 @@ describe('Starux hook tests', () => {
         store.store.actions.setName('kim');
       });
       expect(content.innerHTML).toBe('kim');
+      expect(onRerender).toBeCalledTimes(2);
+    });
+
+    test('[selector] key [return object]', async () => {
+      const { findByTestId } = render(<SelectorComponent selector="getProfile"/>);
+      const content = await findByTestId('selector');
+      const jsonState = JSON.stringify(store.store.get().profile);
+      const state = JSON.parse(jsonState);
+
+      expect(content.innerHTML).toBe(jsonState);
+      expect(onRerender).toBeCalledTimes(1);
+      act(() => {
+        store.store.actions.deactivate();
+      });
+      expect(onRerender).toBeCalledTimes(1);
+      act(() => {
+        store.store.actions.setAvatar('kim');
+      });
+      expect(content.innerHTML).toBe(JSON.stringify({ ...state, avatar: 'kim' }));
       expect(onRerender).toBeCalledTimes(2);
     });
 
@@ -220,14 +236,14 @@ describe('Starux hook tests', () => {
       expect(onRerender).toBeCalledTimes(2);
     });
 
-    test('[actions] work',  async () => {
+    test('[actions] work', async () => {
       expect(store.store.get().isActive).toBe(true);
       render(<ActionComponent
         do={(actions) => void actions.asyncDeactivate()}/>);
       expect(store.store.get().isActive).toBe(true);
       await waitFor(() => {
         expect(store.store.get().isActive).toBe(false);
-      })
+      });
     });
   });
 });

@@ -5,12 +5,12 @@ const delay = (ms: number) => {
 };
 
 const initialState: {
-  profile: { credentials: { password: string; login: string }; avatar: string };
+  profile: { credentials: { password: string; login: string, arr: any[] }; avatar: string };
   name?: string;
   isActive: boolean
 } = {
   isActive: true,
-  profile: { avatar: 'avatar.png', credentials: { login: 'starux', password: 'pass' } },
+  profile: { avatar: 'avatar.png', credentials: { login: 'starux', password: 'pass', arr: [ 'asdasd', { a: 'a' } ] } },
 };
 
 const createTestStore = () => createStore({
@@ -30,11 +30,7 @@ const createTestStore = () => createStore({
       state.isActive = false;
     },
     clear: () => {
-      return {
-        name: '',
-        isActive: true,
-        profile: { avatar: 'avatar.png', credentials: { login: 'starux', password: 'pass' } },
-      };
+      return initialState;
     },
     asyncSetAvatar: async (state, avatar: string) => {
       await delay(200);
@@ -98,8 +94,8 @@ describe('Starux tests', () => {
         listener();
       });
       store.actions.setName('anton');
-      expect(listener).toBeCalledTimes(1)
-    })
+      expect(listener).toBeCalledTimes(1);
+    });
   });
 
   describe('async tests', () => {

@@ -6,37 +6,32 @@ const checkIsObject = (value: unknown): value is Record<string, any> => {
   return typeof value === 'object' && value !== null;
 };
 
-const findTarget = (obj: Record<string, any>, fullPath: string[]) => {
-  let target: any = obj;
-
-  for (const path of fullPath) {
-    target = target[path as keyof typeof target];
+const createMutableObject = <Obj>(target: Obj, onChange?: (obj: Obj) => void): Obj => {
+  if (!checkIsObject(target)) {
+    return target;
   }
+  type NewTarget = Obj[keyof Obj];
 
-  return target;
-};
+  const memo = {} as Obj;
 
-const createMutableObject = <Obj>(obj: Obj, onChange?: (obj: Obj) => void, currentPath: string[] = []): Obj => {
-  if (!checkIsObject(obj)) {
-    return obj;
-  }
-
-  const target = findTarget(obj, currentPath);
-  const memo = {} as typeof target;
+  const getChangeHandler = (key: keyof Obj) => (obj: NewTarget) => {
+    target[key] = obj as any;
+    onChange?.(target);
+  };
 
   return new Proxy(target, {
-    get: (target, key: string) => {
-      const value = checkIsObject(target[key])
-        ? memo[key] ? memo[key] : createMutableObject(obj, onChange, [ ...currentPath, key ])
-        : target[key];
+    get: (target, _key) => {
+      const key = _key as keyof Obj;
+      const value = memo[key] ? memo[key] : createMutableObject<NewTarget>(target[key], getChangeHandler(key));
 
       memo[key] = value;
 
       return value;
     },
-    set: (target, key, value) => {
+    set: (target, _key, value) => {
+      const key = _key as keyof Obj;
       target[key] = value;
-      onChange?.(obj);
+      getChangeHandler(key)(value);
       return true;
     },
   });
