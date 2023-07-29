@@ -58,9 +58,9 @@ Selectors are used as an aid to avoid placing them in separate functions/objects
 ### Usage
 
 ```jsx
-userStore.setName('Anna') // changes state.name to Anna
-userStore.setSurname('Baykova') // return Promise
-await userStore.setSurname('Baykova') // changes state.surname to Baykova
+userStore.actions.setName('Anna') // changes state.name to Anna
+userStore.actions.setSurname('Baykova') // return Promise
+await userStore.actions.setSurname('Baykova') // changes state.surname to Baykova
 
 userStore.get() // returns state
 userStore.get((state) => state.name) // returns state.name
