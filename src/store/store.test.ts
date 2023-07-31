@@ -5,12 +5,12 @@ const delay = (ms: number) => {
 };
 
 const initialState: {
-  profile: { credentials: { password: string; login: string, arr: any[] }; avatar: string };
+  profile: { credentials: { password: string; login: string, arr: any[] }; avatar: string, avatarNum: number };
   name?: string;
   isActive: boolean
 } = {
   isActive: true,
-  profile: { avatar: 'avatar.png', credentials: { login: 'starux', password: 'pass', arr: [ 'asdasd', { a: 'a' } ] } },
+  profile: { avatar: 'avatar.png', avatarNum: 0, credentials: { login: 'starux', password: 'pass', arr: [ 'asdasd', { a: 'a' } ] } },
 };
 
 const createTestStore = () => createStore({
@@ -19,8 +19,18 @@ const createTestStore = () => createStore({
     setName: (state, name: string) => {
       state.name = name;
     },
+    setNameAndActiveByName: (state, name: string) => {
+      state.name = name;
+      state.isActive = name !== 'alex';
+    },
     setAvatar: (state, avatar: string) => {
       state.profile.avatar = avatar;
+    },
+    setAvatarAndAvatarNum: async (state, avatar: string) => {
+      const newNum  = state.profile.avatarNum + 1;
+      state.profile.avatar = avatar;
+      state.profile.avatarNum = newNum;
+      await delay(200);
     },
     setCredentials: (state, login: string, password: string) => {
       state.profile.credentials.login = login;
@@ -77,6 +87,15 @@ describe('Starux tests', () => {
       expect(newState.profile.avatar).toBe('ava.jpg');
     });
 
+    test('changes state in context', () => {
+      const state = store.get();
+      expect(state.name).toBe(undefined);
+      expect(state.isActive).toBeTruthy();
+      store.actions.setNameAndActiveByName('alex');
+      expect(state.name).toBe('alex');
+      expect(state.isActive).toBeFalsy();
+    })
+
     test('Returning state', () => {
       const state = store.get();
       expect(state.profile.avatar).toBe('avatar.png');
@@ -103,6 +122,16 @@ describe('Starux tests', () => {
     beforeEach(() => {
       store = createTestStore();
     });
+
+    test('changes state in context async', async () => {
+      const state = store.get();
+      expect(state.profile.avatar).toBe('avatar.png');
+      expect(state.profile.avatarNum).toBe(0);
+      await store.actions.setAvatarAndAvatarNum('ava');
+      await store.actions.setAvatarAndAvatarNum('av0');
+      expect(state.profile.avatar).toBe('av0');
+      expect(state.profile.avatarNum).toBe(2);
+    })
 
     test('Changing property of state property', async () => {
       const state = store.get();

@@ -22,8 +22,11 @@ const createMutableObject = <Obj>(target: Obj, onChange?: (obj: Obj) => void): O
   return new Proxy(target, {
     get: (target, _key) => {
       const key = _key as keyof Obj;
-      const value = memo[key] ? memo[key] : createMutableObject<NewTarget>(target[key], getChangeHandler(key));
-
+      const value = checkIsObject(target[key])
+        ? memo[key]
+          ? memo[key]
+          : createMutableObject<NewTarget>(target[key], getChangeHandler(key))
+        : target[key]
       memo[key] = value;
 
       return value;

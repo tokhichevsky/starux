@@ -5,6 +5,7 @@ module.exports = {
   entry: {
     'index': './src/index.ts',
     'react': './src/react.ts',
+    'middlewares': './src/middlewares.ts',
   },
   devtool: 'source-map',
   output: {

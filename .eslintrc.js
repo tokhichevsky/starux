@@ -11,7 +11,7 @@ module.exports = {
     browser: true,
     es6: true,
   },
-  ignorePatterns: ['.eslintrc.js'],
+  ignorePatterns: ['.eslintrc.js', '*.test.ts'],
   extends: [
     'eslint:recommended',
     'plugin:promise/recommended',
