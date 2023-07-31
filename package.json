@@ -8,7 +8,8 @@
   "homepage": "https://github.com/tokhichevsky/starux",
   "exports": {
     ".": "./index.js",
-    "./react": "./react.js"
+    "./react": "./react.js",
+    "./middlewares": "./middlewares.js"
   },
   "scripts": {
     "test": "jest",
