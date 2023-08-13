@@ -145,6 +145,9 @@ describe('Starux hook tests', () => {
       act(() => {
         store.store.actions.setCredentials('login', 'password');
       });
+      const credentials = store.store.get().profile.credentials;
+      expect(credentials.login).toEqual('login');
+      expect(credentials.password).toEqual('password');
       expect(onRerender).toBeCalledTimes(1);
       act(() => {
         store.store.actions.setAvatar('ava');

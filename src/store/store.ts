@@ -81,7 +81,7 @@ export const createStore = <State, Reducers extends StoreReducers<State>, Select
 
   const actions: StoreActions<State, Reducers> = {} as StoreActions<State, Reducers>;
   for (const name of Object.keys(reducers) as (keyof Reducers)[]) {
-    actions[name] = ((payload?: any) => setState(reducers[name](mutableState, payload))) as any;
+    actions[name] = ((...args: any[]) => setState(reducers[name](mutableState, ...args))) as any;
   }
 
   const subscribe = (listener: StoreListener<State>) => {

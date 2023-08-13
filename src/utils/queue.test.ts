@@ -43,4 +43,16 @@ describe('queue tests', () => {
     await Promise.race([ queueFunc(100, 'done1'), queueFunc(30, 'done2') ]);
     expect(func).toBeCalledTimes(4);
   });
+
+  test('many args', async () => {
+    const func = async (time: number, result: string, another: string) => {
+      await delay(time);
+      return [result, another];
+    };
+
+    const queueFunc = createQueue(func);
+
+    const allResult = await Promise.all([ queueFunc(100, 'done1', 'another1'), queueFunc(30, 'done2', 'another2') ]);
+    expect(allResult).toEqual([['done1', 'another1'], ['done2', 'another2']]);
+  });
 });
