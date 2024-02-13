@@ -12,7 +12,7 @@ npm install starux
 ```
 
 ```bash
-npm add starux
+yarn add starux
 ```
 
 
